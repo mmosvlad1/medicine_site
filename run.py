@@ -1,26 +1,25 @@
+import connexion
 from flask import Flask
 from flask_restful import Api
-
-# from app.models import *
 from app.models import db
 from app.urls import initialize_routes
+from connexion.resolver import RestyResolver
 
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app = connexion.App(__name__, specification_dir='swagger/')
+app.add_api('pharmacy_api.yaml', resolver=RestyResolver('api'))
 
-db.init_app(app)
-api = Api(app)
+# Ініціалізуємо Flask та встановлюємо параметри для бази даних
+flask_app = app.app
+flask_app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# Ініціалізуємо SQLAlchemy та Api
+db.init_app(flask_app)
+api = Api(flask_app)
 
+# Ініціалізуємо маршрути
 initialize_routes(api)
 
-#
-# @app.route('/')
-# def hello_world():
-#     return 'Hello World'
-
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
