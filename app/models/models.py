@@ -5,7 +5,9 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
-class User(db.Model):
+class UserModel(db.Model):
+    __tablename__ = 'user'
+
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), nullable=False, unique=True)
     psw = db.Column(db.String(500), nullable=False)
@@ -15,7 +17,9 @@ class User(db.Model):
         return f"<User {self.id}: {self.email}>"
 
 
-class Profile(db.Model):
+class ProfileModel(db.Model):
+    __tablename__ = 'profile'
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     surname = db.Column(db.String(50), nullable=False)
@@ -27,9 +31,12 @@ class Profile(db.Model):
         return f"<Profile {self.id}: {self.name} {self.surname}>"
 
 
-class Medicine(db.Model):
+class MedicineModel(db.Model):
+    __tablename__ = 'medicine'
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(500), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     quantity = db.Column(db.Integer, nullable=False)
     price = db.Column(db.DECIMAL(10, 2), nullable=False)
@@ -38,7 +45,9 @@ class Medicine(db.Model):
         return f"<Medicine {self.id}: {self.name}>"
 
 
-class Category(db.Model):
+class CategoryModel(db.Model):
+    __tablename__ = 'category'
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
 
@@ -46,18 +55,21 @@ class Category(db.Model):
         return f"<Category {self.id}: {self.name}>"
 
 
-class Purchase(db.Model):
+class PurchaseModel(db.Model):
+    __tablename__ = 'purchase'
     id = db.Column(db.Integer, primary_key=True)
     profile_id = db.Column(db.Integer, db.ForeignKey('profile.id'))
     total_amount = db.Column(db.DECIMAL(10, 2), nullable=False)
     purchase_date = db.Column(db.DateTime, default=datetime.utcnow)
-    items = db.relationship('PurchaseItem', backref='purchase', lazy=True)
+    items = db.relationship('PurchaseItemModel', backref='purchase', lazy=True)
 
     def __repr__(self):
         return f"<Purchase {self.id}: {self.purchase_date}>"
 
 
-class PurchaseItem(db.Model):
+class PurchaseItemModel(db.Model):
+    __tablename__ = 'purchase_item'
+
     id = db.Column(db.Integer, primary_key=True)
     purchase_id = db.Column(db.Integer, db.ForeignKey('purchase.id'))
     medicine_id = db.Column(db.Integer, db.ForeignKey('medicine.id'))
@@ -68,7 +80,8 @@ class PurchaseItem(db.Model):
         return f"<PurchaseItem {self.id}: Medicine={self.medicine_id}, Quantity={self.quantity}>"
 
 
-class Demand(db.Model):
+class DemandModel(db.Model):
+    __tablename__ = 'demand'
     id = db.Column(db.Integer, primary_key=True)
     medicine_id = db.Column(db.Integer, db.ForeignKey('medicine.id'))
     quantity = db.Column(db.Integer, nullable=False)

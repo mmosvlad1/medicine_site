@@ -1,0 +1,1 @@
+from .auth import blp as AuthBlueprint
