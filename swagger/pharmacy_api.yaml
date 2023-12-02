@@ -6,6 +6,10 @@ info:
     Users can view information about medicines, make purchases, and request medicines that are currently not in stock.
   version: 1.0.0
 
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+
 paths:
   /medicines:
     get:
