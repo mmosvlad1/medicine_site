@@ -4,7 +4,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 from app.models import *
-from schemas import MedicineSchema
+from schemas import MedicineSchema, DemandGetSchema, DemandPutSchema
 
 blp = Blueprint("Medicine", __name__, url_prefix="/medicine", description="Operations on medicine")
 
@@ -12,7 +12,7 @@ BLOCKLIST = set()
 
 
 @blp.route('/')
-class EventsList(MethodView):
+class MedicineList(MethodView):
     @blp.response(200, MedicineSchema(many=True))
     def get(self):
         medicine = MedicineModel.query.all()
@@ -24,7 +24,6 @@ class EventsList(MethodView):
     def post(self, new_data):
         user_id = get_jwt_identity()
         user = UserModel.query.get_or_404(user_id)
-        datetime_object = datetime.strptime(new_data["date"], "%Y-%m-%dT%H:%M:%S")
         if not user:
             abort(404, message="User not found.")
         medicine = MedicineModel(name=new_data["name"], description=new_data["description"],
@@ -32,3 +31,79 @@ class EventsList(MethodView):
         db.session.add(medicine)
         db.session.commit()
         return MedicineSchema().dump(medicine), 201
+
+
+@blp.route('/<int:medicine_id>')
+class MedicineResource(MethodView):
+    # @jwt_required()
+    @blp.response(200, MedicineSchema)
+    def get(self, medicine_id):
+        medicine = MedicineModel.query.get_or_404(medicine_id)
+        if not medicine:
+            abort(404, message="Medicine not found.")
+        return MedicineSchema().dump(medicine)
+
+    @blp.arguments(MedicineSchema)
+    @blp.response(200, MedicineSchema)
+    @jwt_required()
+    def put(self, update_data, medicine_id):
+        medicine = MedicineModel.query.get_or_404(medicine_id)
+        if not medicine:
+            abort(404, message="Medicine not found.")
+
+        for key, value in update_data.items():
+            setattr(medicine, key, value)
+        db.session.add(medicine)
+        db.session.commit()
+        return MedicineSchema().dump(medicine)
+
+    @jwt_required()
+    @blp.response(204)
+    def delete(self, medicine_id):
+        medicine = MedicineModel.query.get_or_404(medicine_id)
+        if not medicine:
+            abort(404, message="Medicine not found.")
+        db.session.delete(medicine)
+        db.session.commit()
+        return '', 204
+
+
+@blp.route('/<int:medicine_id>/demand')
+class DemandResource(MethodView):
+    # @jwt_required()
+    @blp.response(200, DemandGetSchema)
+    def get(self, medicine_id):
+        medicine = MedicineModel.query.get_or_404(medicine_id)
+        if not medicine:
+            abort(404, message="Medicine not found.")
+        get_demand = medicine.demand
+
+        return DemandGetSchema().dump({"demand": get_demand})
+
+    @blp.response(200, DemandGetSchema)
+    @jwt_required()
+    def put(self, medicine_id):
+        medicine = MedicineModel.query.get_or_404(medicine_id)
+        if not medicine:
+            abort(404, message="Medicine not found.")
+
+        medicine.demand += 1
+        get_demand = medicine.demand
+
+        db.session.add(medicine)
+        db.session.commit()
+        return DemandGetSchema().dump({"demand": get_demand})
+
+    @jwt_required()
+    @blp.response(204, DemandGetSchema)
+    def delete(self, medicine_id):
+        medicine = MedicineModel.query.get_or_404(medicine_id)
+        if not medicine:
+            abort(404, message="Medicine not found.")
+
+        medicine.demand -= 1
+        get_demand = medicine.demand
+
+        db.session.add(medicine)
+        db.session.commit()
+        return DemandGetSchema().dump({"demand": get_demand})

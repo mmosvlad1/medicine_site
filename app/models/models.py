@@ -39,6 +39,7 @@ class MedicineModel(db.Model):
     description = db.Column(db.String(500), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     price = db.Column(db.DECIMAL(10, 2), nullable=False)
+    demand = db.Column(db.Integer, default=0)
 
     def __repr__(self):
         return f"<Medicine {self.id}: {self.name}>"
@@ -46,34 +47,13 @@ class MedicineModel(db.Model):
 
 class PurchaseModel(db.Model):
     __tablename__ = 'purchase'
+
     id = db.Column(db.Integer, primary_key=True)
     profile_id = db.Column(db.Integer, db.ForeignKey('profile.id'))
+    medicine_id = db.Column(db.Integer, db.ForeignKey('medicine.id'))
+    quantity = db.Column(db.Integer, nullable=False)
     total_amount = db.Column(db.DECIMAL(10, 2), nullable=False)
     purchase_date = db.Column(db.DateTime, default=datetime.utcnow)
-    items = db.relationship('PurchaseItemModel', backref='purchase', lazy=True)
 
     def __repr__(self):
         return f"<Purchase {self.id}: {self.purchase_date}>"
-
-
-class PurchaseItemModel(db.Model):
-    __tablename__ = 'purchase_item'
-
-    id = db.Column(db.Integer, primary_key=True)
-    purchase_id = db.Column(db.Integer, db.ForeignKey('purchase.id'))
-    medicine_id = db.Column(db.Integer, db.ForeignKey('medicine.id'))
-    quantity = db.Column(db.Integer, nullable=False)
-    price = db.Column(db.DECIMAL(10, 2), nullable=False)
-
-    def __repr__(self):
-        return f"<PurchaseItem {self.id}: Medicine={self.medicine_id}, Quantity={self.quantity}>"
-
-
-class DemandModel(db.Model):
-    __tablename__ = 'demand'
-    id = db.Column(db.Integer, primary_key=True)
-    medicine_id = db.Column(db.Integer, db.ForeignKey('medicine.id'))
-    quantity = db.Column(db.Integer, nullable=False)
-
-    def __repr__(self):
-        return f"<Demand {self.id}: Medicine={self.medicine_id}, Quantity={self.quantity}>"

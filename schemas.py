@@ -27,6 +27,17 @@ class MedicineSchema(Schema):
     description = fields.Str(required=True, validate=validate.Length(max=500))
     quantity = fields.Int(required=True)
     price = fields.Decimal(required=True, as_string=True)
+    demand = fields.Int(required=True)
+
+
+class DemandGetSchema(Schema):
+    demand = fields.Int()
+
+
+class DemandPutSchema(Schema):
+    medicine_id = fields.Int()
+
+
 #
 #
 # class PurchaseItemSchema(Schema):
@@ -45,7 +56,4 @@ class MedicineSchema(Schema):
 #     items = fields.Nested(PurchaseItemSchema(), many=True)
 #
 #
-# class DemandSchema(Schema):
-#     id = fields.Int(dump_only=True)
-#     medicine_id = fields.Int()
-#     quantity = fields.Int(required=True)
+
