@@ -21,18 +21,12 @@ class LoginUserSchema(Schema):
     psw = fields.Str(required=True)
 
 
-# class MedicineSchema(Schema):
-#     id = fields.Int(dump_only=True)
-#     name = fields.Str(required=True, validate=validate.Length(max=100))
-#     description = fields.Str(required=True, validate=validate.Length(max=500))
-#     category_id = fields.Int()
-#     quantity = fields.Int(required=True)
-#     price = fields.Decimal(required=True, as_string=True)
-#
-#
-# class CategorySchema(Schema):
-#     id = fields.Int(dump_only=True)
-#     name = fields.Str(required=True, validate=validate.Length(max=50))
+class MedicineSchema(Schema):
+    id = fields.Int(dump_only=True)
+    name = fields.Str(required=True, validate=validate.Length(max=100))
+    description = fields.Str(required=True, validate=validate.Length(max=500))
+    quantity = fields.Int(required=True)
+    price = fields.Decimal(required=True, as_string=True)
 #
 #
 # class PurchaseItemSchema(Schema):

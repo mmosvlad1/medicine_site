@@ -37,22 +37,11 @@ class MedicineModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(500), nullable=False)
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     quantity = db.Column(db.Integer, nullable=False)
     price = db.Column(db.DECIMAL(10, 2), nullable=False)
 
     def __repr__(self):
         return f"<Medicine {self.id}: {self.name}>"
-
-
-class CategoryModel(db.Model):
-    __tablename__ = 'category'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False)
-
-    def __repr__(self):
-        return f"<Category {self.id}: {self.name}>"
 
 
 class PurchaseModel(db.Model):

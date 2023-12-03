@@ -1,4 +1,4 @@
-from .routes import AuthBlueprint  # , EventBlueprint, UserBlueprint
+from .routes import AuthBlueprint, MedicineBlueprint  # , EventBlueprint, UserBlueprint
 from .models import db
 
 
@@ -20,7 +20,7 @@ def create_app(config_class=DevelopmentConfig):
     config_jwt(app)
 
     api.register_blueprint(AuthBlueprint)
-    # api.register_blueprint(EventBlueprint)
+    api.register_blueprint(MedicineBlueprint)
     # api.register_blueprint(UserBlueprint)
 
     return app

@@ -4,7 +4,7 @@ from flask_jwt_extended import create_access_token
 from passlib.hash import pbkdf2_sha256
 
 from app.models import *
-from schemas import RegisterUserSchema, CreateProfileSchema, LoginUserSchema
+from schemas import RegisterUserSchema, LoginUserSchema
 
 blp = Blueprint("Auth", __name__, url_prefix="/auth", description="Authentication operations")
 
