@@ -11,24 +11,13 @@ class UserModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), nullable=False, unique=True)
     psw = db.Column(db.String(500), nullable=False)
+    name = db.Column(db.String(50), nullable=False)
+    surname = db.Column(db.String(50), nullable=False)
+    address = db.Column(db.String(500), nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         return f"<User {self.id}: {self.email}>"
-
-
-class ProfileModel(db.Model):
-    __tablename__ = 'profile'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False)
-    surname = db.Column(db.String(50), nullable=False)
-    address = db.Column(db.String(500), nullable=False)
-
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-    def __repr__(self):
-        return f"<Profile {self.id}: {self.name} {self.surname}>"
 
 
 class MedicineModel(db.Model):
@@ -49,7 +38,7 @@ class PurchaseModel(db.Model):
     __tablename__ = 'purchase'
 
     id = db.Column(db.Integer, primary_key=True)
-    profile_id = db.Column(db.Integer, db.ForeignKey('profile.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     medicine_id = db.Column(db.Integer, db.ForeignKey('medicine.id'))
     quantity = db.Column(db.Integer, nullable=False)
     total_amount = db.Column(db.DECIMAL(10, 2), nullable=False)

@@ -5,15 +5,10 @@ class RegisterUserSchema(Schema):
     id = fields.Int(dump_only=True)
     email = fields.Email(required=True)
     psw = fields.Str(required=True, validate=validate.Length(min=8))
-    date = fields.DateTime(dump_only=True)
-
-
-class CreateProfileSchema(Schema):
-    id = fields.Int(dump_only=True)
     name = fields.Str(required=True, validate=validate.Length(max=50))
     surname = fields.Str(required=True, validate=validate.Length(max=50))
     address = fields.Str(required=True, validate=validate.Length(max=500))
-    user_id = fields.Int()
+    date = fields.DateTime(dump_only=True)
 
 
 class LoginUserSchema(Schema):
@@ -27,33 +22,26 @@ class MedicineSchema(Schema):
     description = fields.Str(required=True, validate=validate.Length(max=500))
     quantity = fields.Int(required=True)
     price = fields.Decimal(required=True, as_string=True)
-    demand = fields.Int(required=True)
+    demand = fields.Int(dump_only=True)
 
 
 class DemandGetSchema(Schema):
     demand = fields.Int()
 
 
-class DemandPutSchema(Schema):
-    medicine_id = fields.Int()
+class UserGetSchema(Schema):
+    id = fields.Int(dump_only=True)
+    name = fields.Str()
+    surname = fields.Str()
+    address = fields.Str()
+    email = fields.Str()
 
 
-#
-#
-# class PurchaseItemSchema(Schema):
-#     id = fields.Int(dump_only=True)
-#     purchase_id = fields.Int()
-#     medicine_id = fields.Int()
-#     quantity = fields.Int(required=True)
-#     price = fields.Decimal(required=True, as_string=True)
-#
-#
-# class PurchaseSchema(Schema):
-#     id = fields.Int(dump_only=True)
-#     profile_id = fields.Int()
-#     total_amount = fields.Decimal(required=True, as_string=True)
-#     purchase_date = fields.DateTime(dump_only=True)
-#     items = fields.Nested(PurchaseItemSchema(), many=True)
-#
-#
+class MakePurchaseSchema(Schema):
+    id = fields.Int(dump_only=True)
+    user_id = fields.Int(dump_only=True)
+    medicine_id = fields.Int(dump_only=True)
+    quantity = fields.Int(required=True, validate=validate.Range(min=1))
+    total_amount = fields.Decimal(dump_only=True)
+    purchase_date = fields.Str(dump_only=True)
 

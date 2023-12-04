@@ -2,6 +2,8 @@ from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from flask_jwt_extended import create_access_token
 from passlib.hash import pbkdf2_sha256
+from datetime import datetime
+
 
 from app.models import *
 from schemas import RegisterUserSchema, LoginUserSchema
@@ -20,7 +22,10 @@ class UserRegister(MethodView):
 
         user = UserModel(
             email=user_data["email"],
-            psw=pbkdf2_sha256.hash(user_data["psw"])
+            psw=pbkdf2_sha256.hash(user_data["psw"]),
+            name=user_data["name"],
+            surname=user_data["surname"],
+            address=user_data["address"],
         )
         db.session.add(user)
         db.session.commit()

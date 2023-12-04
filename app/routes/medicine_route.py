@@ -4,7 +4,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 from app.models import *
-from schemas import MedicineSchema, DemandGetSchema, DemandPutSchema
+from schemas import MedicineSchema, DemandGetSchema, MakePurchaseSchema
 
 blp = Blueprint("Medicine", __name__, url_prefix="/medicine", description="Operations on medicine")
 
@@ -26,11 +26,15 @@ class MedicineList(MethodView):
         user = UserModel.query.get_or_404(user_id)
         if not user:
             abort(404, message="User not found.")
-        medicine = MedicineModel(name=new_data["name"], description=new_data["description"],
-                                 quantity=new_data["quantity"], price=new_data["price"])
+
+        medicine = MedicineModel(name=new_data["name"],
+                                 description=new_data["description"],
+                                 quantity=new_data["quantity"],
+                                 price=new_data["price"])
+
         db.session.add(medicine)
         db.session.commit()
-        return MedicineSchema().dump(medicine), 201
+        return MedicineSchema().dump(medicine)
 
 
 @blp.route('/<int:medicine_id>')
@@ -107,3 +111,28 @@ class DemandResource(MethodView):
         db.session.add(medicine)
         db.session.commit()
         return DemandGetSchema().dump({"demand": get_demand})
+
+
+@blp.route('/<int:medicine_id>/purchase')
+class MedicineList(MethodView):
+    @jwt_required()
+    @blp.arguments(MakePurchaseSchema)
+    @blp.response(201, MakePurchaseSchema)
+    def post(self, new_data, medicine_id):
+        user_id = get_jwt_identity()
+        user = UserModel.query.get_or_404(user_id)
+        if not user:
+            abort(404, message="User not found.")
+
+        medicine = MedicineModel.query.get_or_404(medicine_id)
+        if not medicine:
+            abort(404, message="Medicine not found.")
+
+        purchase = PurchaseModel(user_id=user.id,
+                                 medicine_id=medicine.id,
+                                 quantity=new_data["quantity"],
+                                 total_amount=new_data["total_amount"])
+
+        db.session.add(purchase)
+        db.session.commit()
+        return MakePurchaseSchema().dump(purchase)
