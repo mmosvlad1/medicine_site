@@ -9,8 +9,15 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     PROPAGATE_EXCEPTIONS = True
     JWT_SECRET_KEY = "vlad"
-    SECRET_KEY = "9c9c2ff463c47cea625cf6652b9b2043"
+    SECRET_KEY = "zH81h7C0JOytvq26_hw1P3VsSTCKm7zdu6hc-woHNnk"
 
 
 class DevelopmentConfig(Config):
     DEBUG = True
+
+
+class TestingConfig(Config):
+    TESTING = True
+    JWT_SECRET_KEY = "vlad"
+    SECRET_KEY = "zH81h7C0JOytvq26_hw1P3VsSTCKm7zdu6hc-woHNnk"
+    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
