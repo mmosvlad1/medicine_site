@@ -128,10 +128,16 @@ class MakePurchase(MethodView):
         if not medicine:
             abort(404, message="Medicine not found.")
 
+        if new_data["quantity"] > medicine.quantity:
+            abort(404, message="Don't have enough medicine.")
+
+        total_amount = new_data["quantity"] * medicine.price
+        medicine.quantity -= new_data["quantity"]
+
         purchase = PurchaseModel(user_id=user.id,
                                  medicine_id=medicine.id,
                                  quantity=new_data["quantity"],
-                                 total_amount=new_data["total_amount"])
+                                 total_amount=total_amount)
 
         db.session.add(purchase)
         db.session.commit()
