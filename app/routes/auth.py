@@ -1,16 +1,12 @@
 from flask.views import MethodView
-from flask_smorest import Blueprint, abort
 from flask_jwt_extended import create_access_token
+from flask_smorest import Blueprint, abort
 from passlib.hash import pbkdf2_sha256
-from datetime import datetime
-
 
 from app.models import *
 from schemas import RegisterUserSchema, LoginUserSchema
 
 blp = Blueprint("Auth", __name__, url_prefix="/auth", description="Authentication operations")
-
-BLOCKLIST = set()
 
 
 @blp.route("/register")
@@ -44,4 +40,3 @@ class UserLogin(MethodView):
             return {"access_token": access_token}, 200
 
         abort(401, message="Invalid credentials.")
-

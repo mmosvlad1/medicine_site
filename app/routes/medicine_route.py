@@ -6,9 +6,9 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.models import *
 from schemas import MedicineSchema, DemandGetSchema, MakePurchaseSchema
 
-blp = Blueprint("Medicine", __name__, url_prefix="/medicine", description="Operations on medicine")
+blp = Blueprint("Medicine", __name__, url_prefix="/medicine", description="Operations with medicine")
 
-BLOCKLIST = set()
+# BLOCKLIST = set()
 
 
 @blp.route('/')
@@ -114,7 +114,7 @@ class DemandResource(MethodView):
 
 
 @blp.route('/<int:medicine_id>/purchase')
-class MedicineList(MethodView):
+class MakePurchase(MethodView):
     @jwt_required()
     @blp.arguments(MakePurchaseSchema)
     @blp.response(201, MakePurchaseSchema)
