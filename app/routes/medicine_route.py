@@ -6,7 +6,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.models import *
 from schemas import MedicineSchema, DemandGetSchema, MakePurchaseSchema
 
-blp = Blueprint("Medicine", __name__, url_prefix="/medicine", description="Operations with medicine")
+blp = Blueprint("Medicine", __name__, url_prefix="/api/medicine", description="Operations with medicine")
 
 # BLOCKLIST = set()
 
@@ -22,10 +22,10 @@ class MedicineList(MethodView):
     @blp.arguments(MedicineSchema)
     @blp.response(201, MedicineSchema)
     def post(self, new_data):
-        user_id = get_jwt_identity()
-        user = UserModel.query.get_or_404(user_id)
-        if not user:
-            abort(404, message="User not found.")
+        current_user_id = get_jwt_identity()
+        current_user = UserModel.query.get(current_user_id)
+        if not current_user or current_user.role_id != 2:
+            abort(403, message="Permission denied.")
 
         medicine = MedicineModel(name=new_data["name"],
                                  description=new_data["description"],
@@ -39,7 +39,6 @@ class MedicineList(MethodView):
 
 @blp.route('/<int:medicine_id>')
 class MedicineResource(MethodView):
-    # @jwt_required()
     @blp.response(200, MedicineSchema)
     def get(self, medicine_id):
         medicine = MedicineModel.query.get_or_404(medicine_id)
@@ -51,12 +50,20 @@ class MedicineResource(MethodView):
     @blp.response(200, MedicineSchema)
     @jwt_required()
     def put(self, update_data, medicine_id):
+
+        current_user_id = get_jwt_identity()
+        current_user = UserModel.query.get(current_user_id)
+        if not current_user or current_user.role_id != 2:
+            abort(403, message="Permission denied.")
+
         medicine = MedicineModel.query.get_or_404(medicine_id)
         if not medicine:
             abort(404, message="Medicine not found.")
 
         for key, value in update_data.items():
             setattr(medicine, key, value)
+
+        medicine.demand = 0
         db.session.add(medicine)
         db.session.commit()
         return MedicineSchema().dump(medicine)
@@ -73,8 +80,7 @@ class MedicineResource(MethodView):
 
 
 @blp.route('/<int:medicine_id>/demand')
-class DemandResource(MethodView):
-    # @jwt_required()
+class GetDemand(MethodView):
     @blp.response(200, DemandGetSchema)
     def get(self, medicine_id):
         medicine = MedicineModel.query.get_or_404(medicine_id)
@@ -84,12 +90,17 @@ class DemandResource(MethodView):
 
         return DemandGetSchema().dump({"demand": get_demand})
 
+
+@blp.route('/<int:medicine_id>/demand/plus')
+class IncreaseDemand(MethodView):
     @blp.response(200, DemandGetSchema)
     @jwt_required()
     def put(self, medicine_id):
         medicine = MedicineModel.query.get_or_404(medicine_id)
         if not medicine:
             abort(404, message="Medicine not found.")
+        if medicine.quantity != 0:
+            abort(404, message="Quantity more than 0.")
 
         medicine.demand += 1
         get_demand = medicine.demand
@@ -98,12 +109,17 @@ class DemandResource(MethodView):
         db.session.commit()
         return DemandGetSchema().dump({"demand": get_demand})
 
+
+@blp.route('/<int:medicine_id>/demand/minus')
+class DecreaseDemand(MethodView):
+    @blp.response(200, DemandGetSchema)
     @jwt_required()
-    @blp.response(204, DemandGetSchema)
-    def delete(self, medicine_id):
+    def put(self, medicine_id):
         medicine = MedicineModel.query.get_or_404(medicine_id)
         if not medicine:
             abort(404, message="Medicine not found.")
+        if medicine.demand == 0:
+            abort(404, message="Demand can't be less than 0.")
 
         medicine.demand -= 1
         get_demand = medicine.demand

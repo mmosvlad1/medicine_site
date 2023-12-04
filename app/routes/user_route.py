@@ -5,7 +5,7 @@ from flask_jwt_extended import jwt_required
 from app.models import *
 from schemas import UserGetSchema
 
-blp = Blueprint("User", __name__, url_prefix="/users", description="User operations")
+blp = Blueprint("User", __name__, url_prefix="/api/users", description="User operations")
 
 
 @blp.route('/')
@@ -20,7 +20,7 @@ class UserList(MethodView):
 class UserResource(MethodView):
     @blp.response(200, UserGetSchema)
     def get(self, user_id):
-        medicine = UserModel.query.get_or_404(user_id)
-        if not medicine:
+        user = UserModel.query.get_or_404(user_id)
+        if not user:
             abort(404, message="User not found.")
-        return UserGetSchema().dump(medicine)
+        return UserGetSchema().dump(user)

@@ -6,7 +6,7 @@ from passlib.hash import pbkdf2_sha256
 from app.models import *
 from schemas import RegisterUserSchema, LoginUserSchema
 
-blp = Blueprint("Auth", __name__, url_prefix="/auth", description="Authentication operations")
+blp = Blueprint("Auth", __name__, url_prefix="/api/auth", description="Authentication operations")
 
 
 @blp.route("/register")
@@ -22,6 +22,7 @@ class UserRegister(MethodView):
             name=user_data["name"],
             surname=user_data["surname"],
             address=user_data["address"],
+            role_id=user_data["role_id"]
         )
         db.session.add(user)
         db.session.commit()

@@ -8,6 +8,7 @@ class RegisterUserSchema(Schema):
     name = fields.Str(required=True, validate=validate.Length(max=50))
     surname = fields.Str(required=True, validate=validate.Length(max=50))
     address = fields.Str(required=True, validate=validate.Length(max=500))
+    role_id = fields.Int(default=1)
     date = fields.DateTime(dump_only=True)
 
 
@@ -20,8 +21,8 @@ class MedicineSchema(Schema):
     id = fields.Int(dump_only=True)
     name = fields.Str(required=True, validate=validate.Length(max=100))
     description = fields.Str(required=True, validate=validate.Length(max=500))
-    quantity = fields.Int(required=True)
-    price = fields.Decimal(required=True, as_string=True)
+    quantity = fields.Int(required=True, validate=validate.Range(min=1))
+    price = fields.Decimal(required=True, as_string=True, validate=validate.Range(min=1))
     demand = fields.Int(dump_only=True)
 
 
@@ -35,6 +36,7 @@ class UserGetSchema(Schema):
     surname = fields.Str()
     address = fields.Str()
     email = fields.Str()
+    role_id = fields.Int(dump_only=True)
 
 
 class MakePurchaseSchema(Schema):
