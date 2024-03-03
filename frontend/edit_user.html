@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Information</title>
+    <link rel="stylesheet" href="css/login.css">
+
+</head>
+<body>
+    <div class="container">
+        <h2>User Information</h2>
+        <form action="update_user.php" method="POST">
+            <label for="name">Name:</label><br>
+            <input type="text" id="name" name="name" value="John"><br>
+            <label for="surname">Surname:</label><br>
+            <input type="text" id="surname" name="surname" value="Doe"><br>
+            <label for="address">Address:</label><br>
+            <input type="text" id="address" name="address" value="123 Main St"><br>
+            <label for="mobile_phone">Mobile Phone:</label><br>
+            <input type="text" id="mobile_phone" name="mobile_phone" value="123-456-7890"><br>
+            <label for="sex">Sex:</label><br>
+            <select id="sex" name="sex">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select><br><br>
+            <input type="submit" value="Save Changes">
+        </form>
+    </div>
+</body>
+</html>
