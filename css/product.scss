@@ -1,0 +1,98 @@
+/* Reset CSS */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+  }
+  
+  .container {
+    width: 90%;
+    margin: 0 auto;
+  }
+  
+  header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+  
+    h1 {
+      margin: 0;
+      text-align: center;
+    }
+  }
+  
+  nav ul {
+    list-style: none;
+    text-align: center;
+  
+    li {
+      display: inline;
+      margin-right: 20px;
+  
+      a {
+        color: #fff;
+        text-decoration: none;
+      }
+    }
+  }
+  
+  main {
+    padding: 20px 0;
+  }
+  
+  .product-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  
+  .product-image img {
+    max-width: 300px;
+    height: auto;
+  }
+  
+  .product-info {
+    flex: 1;
+    padding: 0 20px;
+  }
+  
+  .price {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .purchase-button {
+    text-align: center;
+    margin-top: 20px;
+  
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+  
+      &:hover {
+        background-color: #45a049;
+      }
+    }
+  }
+  
+  .footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  
+    /* z-index: 1000; */
+  }
+  

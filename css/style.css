@@ -1,0 +1,63 @@
+/* Custom Styles */
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 20px 0;
+  margin-bottom: 20px; }
+  header h1 {
+    margin: 0; }
+
+.float-right {
+  float: right; }
+  .float-right a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 10px; }
+    .float-right a:hover {
+      text-decoration: underline; }
+
+nav ul {
+  list-style: none; }
+  nav ul li {
+    display: inline;
+    margin-right: 10px; }
+    nav ul li a {
+      color: #fff;
+      text-decoration: none; }
+
+.search {
+  margin-top: 20px; }
+  .search input {
+    padding: 8px;
+    width: 200px; }
+  .search button {
+    padding: 8px 15px;
+    background-color: #4caf50;
+    border: none;
+    color: #fff;
+    cursor: pointer; }
+
+.category-switcher {
+  margin-bottom: 20px; }
+
+.product-list .card {
+  margin-bottom: 20px; }
+  .product-list .card .card-img-top {
+    height: 200px;
+    object-fit: cover; }
+
+.footer {
+  background-color: #333;
+  color: #fff;
+  padding: 20px 0;
+  bottom: 0;
+  width: 100%;
+  /* z-index: 1000; */ }
+  .footer p {
+    margin: 0; }
+
+.spacer {
+  height: 50px;
+  /* Adjust this value as needed */ }
+
+/*# sourceMappingURL=style.css.map */
